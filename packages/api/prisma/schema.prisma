@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(64)
+  email String @db.VarChar(256)
+  emailVerified Boolean  @default(false) @db.Boolean
+  isAnonymous Boolean  @default(false) @db.Boolean
+  uid String @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @default(now()) @updatedAt @db.Date
+
+  attachment Attachment[]
+  task Task[]
+  comment Comment[]
+  tag Tag[]
+  project Project[]
+
+  tasksOnUsers TasksOnUsers[]
+  usersOnWorkspaces UsersOnWorkspaces[]
+
+  @@unique([uid])
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  detail String
+  startAt DateTime? @db.Time(6)
+  limitAt DateTime? @db.Time(6)
+  priority TaskPriority @default(nomal)
+  createdAt DateTime @default(now()) @db.Time(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Time(6)
+
+  userId Int
+  user User? @relation(fields: [userId], references: [id])
+
+  projectId Int
+  project Project? @relation(fields: [projectId], references: [id])
+
+  attachment Attachment[]
+  comment Comment[]
+  tasksOnUsers TasksOnUsers[]
+  taskOnTags TasksOnTags[]
+}
+
+model Workspace {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  detail String
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+
+  ImageId Int?
+  attachment Attachment? @relation(fields: [ImageId], references: [id])
+
+  tag Tag[]
+  project Project[]
+  usersOnWorkspaces UsersOnWorkspaces[]
+
+  @@unique([ImageId])
+}
+
+model Project {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  detail String?
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+
+  userId Int
+  user User? @relation(fields: [userId], references: [id])
+  workspaceId  Int
+  workspace Workspace? @relation(fields: [workspaceId], references: [id])
+  task Task[]
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  color TagColor
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+  
+  workspaceId Int
+  workspace Workspace? @relation(fields: [workspaceId], references: [id])
+  userId Int
+  user User? @relation(fields: [userId], references: [id])
+
+  taskOnTags TasksOnTags[]
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  body String
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+
+  taskId Int
+  task Task? @relation(fields: [taskId], references: [id]) 
+  userId Int
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model Attachment {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  path String @db.VarChar(250)
+  createdAt DateTime @default(now()) @db.Timestamp(3)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+
+  userId Int
+  user User? @relation(fields: [userId], references: [id])
+  taskId Int?
+  task Task? @relation(fields: [taskId], references: [id])
+
+  workspace Workspace?
+
+  @@unique([path])
+}
+
+model TasksOnTags {
+  taskId Int
+  tagId Int
+  task Task @relation(fields: [taskId], references: [id])
+  tag Tag @relation(fields: [tagId], references: [id])
+
+  @@id([taskId, tagId])
+}
+
+model TasksOnUsers {
+  taskId Int
+  userId Int
+  task Task @relation(fields: [taskId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([taskId, userId])
+}
+
+model UsersOnWorkspaces {
+  userId Int
+  workspaceId Int
+  user User @relation(fields: [userId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@id([userId, workspaceId])
+}
+
+enum TaskPriority {
+  high
+  nomal
+  low
+}
+
+enum TagColor {
+  green
+  brown
+  grey
+  orange
+  yellow
+  blue
+  purple
+  red
+  pink
+  indigo
+}
