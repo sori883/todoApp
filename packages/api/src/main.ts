@@ -14,24 +14,10 @@ import { AppModule } from '@/modules/app.module';
 export let firebaseApp: FirebaseApp = undefined;
 
 async function bootstrap() {
-  // bodyParserを無効化する 
-  const fastifyAdapter = new FastifyAdapter();
-  fastifyAdapter.getInstance().removeAllContentTypeParsers();
-  fastifyAdapter
-    .getInstance()
-    .addContentTypeParser("*", { bodyLimit: 0 }, (_request, _payload, done) => {
-      done(null, null);
-    });
-
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    fastifyAdapter,
-    {
-      bodyParser: false,
-    }
+    new FastifyAdapter()
   );
-
-  app.enableCors();
   
   
   // firebase init

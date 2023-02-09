@@ -1,0 +1,158 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CommentModel {
+  id: ID!
+  body: String!
+  createdAt: Date!
+  updatedAt: Date!
+  task: TaskModel!
+  user: UserModel!
+}
+
+type TasksOnTags {
+  taskId: ID!
+  tagId: ID!
+  task: TaskModel!
+  tag: TagModel!
+}
+
+type TagModel {
+  id: ID!
+  name: String!
+  color: TagColor!
+  createdAt: Date!
+  updatedAt: Date!
+  workspace: WorkspaceModel!
+  user: UserModel!
+  tasksOnTags: [TasksOnTags!]
+}
+
+enum TagColor {
+  green
+  brown
+  grey
+  orange
+  yellow
+  blue
+  purple
+  red
+  pink
+  indigo
+}
+
+type UsersOnWorkspaces {
+  userId: ID!
+  workspaceId: ID!
+  user: UserModel!
+  workspace: WorkspaceModel!
+}
+
+type WorkspaceModel {
+  id: ID!
+  name: String!
+  detail: String
+  createdAt: Date!
+  updatedAt: Date!
+  image: [AttachmentModel!]
+  tags: [TagModel!]
+  projects: [ProjectModel!]
+  usersOnWorkspaces: [UsersOnWorkspaces!]!
+}
+
+type ProjectModel {
+  id: ID!
+  name: String!
+  detail: String
+  createdAt: Date!
+  updatedAt: Date!
+  workspace: WorkspaceModel!
+  user: UserModel!
+  task: TaskModel
+}
+
+type TasksOnUsers {
+  taskId: ID!
+  userId: ID!
+  task: TaskModel!
+  user: UserModel!
+}
+
+type TaskModel {
+  id: ID!
+  name: String!
+  detail: String
+  priority: TaskPriority!
+  startAt: Date
+  limitAt: Date
+  createdAt: Date!
+  updatedAt: Date!
+  user: UserModel!
+  project: ProjectModel!
+  comments: [CommentModel!]
+  attachments: [AttachmentModel!]
+  tasksOnTags: [TasksOnTags!]
+  tasksOnUsers: [TasksOnUsers!]
+}
+
+enum TaskPriority {
+  high
+  nomal
+  low
+}
+
+type AttachmentModel {
+  id: ID!
+  name: String!
+  path: String!
+  createdAt: Date!
+  updatedAt: Date!
+  task: TaskModel
+  user: UserModel!
+  workspace: WorkspaceModel
+}
+
+type UserModel {
+  id: ID!
+  name: String!
+  email: String!
+  emailVerified: Boolean!
+  isAnonymous: Boolean!
+  uid: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  tasks: [TaskModel!]!
+  comments: [CommentModel!]!
+  attachments: [AttachmentModel!]!
+  projects: [ProjectModel!]!
+  tags: [TagModel!]!
+  usersOnWorkspaces: [UsersOnWorkspaces!]!
+  tasksOnUsers: [TasksOnUsers!]
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Query {
+  user(id: ID!): UserModel
+}
+
+type Mutation {
+  saveUser(user: AddUserInput!): UserModel!
+  updateUser(user: UpdateUserInput!): UserModel!
+  deleteUser(id: ID!): UserModel
+}
+
+input AddUserInput {
+  name: String!
+  email: String!
+  emailVerified: Boolean!
+  isAnonymous: Boolean!
+  uid: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String!
+}

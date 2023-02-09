@@ -25,6 +25,10 @@ export class AuthService {
     }
   }
 
+  async findOne(id: number) {
+    return await this.prisma.user.findUnique({ where: { id } });
+  }
+
   async save(payload: AddUserInput) {
     return await this.prisma.user.create({ data: payload });
   }

@@ -1,10 +1,10 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType, registerEnumType  } from '@nestjs/graphql';
 
 import { TasksOnTags } from '@/models/tasksOnTags.model';
 import { UserModel } from '@/models/user.model';
 import { WorkspaceModel } from '@/models/workspace.model';
 
-export enum Color {
+export enum TagColor {
   green = 'green',
   brown = 'brown',
   grey = 'grey',
@@ -17,6 +17,8 @@ export enum Color {
   indigo = 'indigo',
 }
 
+registerEnumType(TagColor, { name: 'TagColor' });
+
 @ObjectType()
 export class TagModel {
   @Field((type) => ID)
@@ -25,8 +27,8 @@ export class TagModel {
   @Field()
     name!: string;
 
-  @Field((type) => Color)
-    color?: Color;
+  @Field((type) => TagColor)
+    color!: TagColor;
 
   @Field()
     createdAt!: Date;

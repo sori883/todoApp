@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { AddUserInput, UpdateUserInput } from '@/dto/user.dto';
 import { UserModel } from '@/models/user.model';
@@ -8,6 +8,11 @@ import { AuthService } from '@/services/auth.service';
 @Resolver()
 export class AuthResolver {
   constructor(@Inject(AuthService) private authService: AuthService) {}
+
+  @Query((returns) => UserModel, { nullable: true })
+  async user(@Args("id", { type: () => ID }) id: number) {
+    return await this.authService.findOne(id);
+  }
 
   @Mutation((returns) => UserModel)
   async saveUser(@Args('user') user: AddUserInput) {

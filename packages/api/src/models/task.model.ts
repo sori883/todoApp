@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 import { AttachmentModel } from '@/models/attachment.model';
 import { CommentModel } from '@/models/comment.model';
@@ -7,11 +7,13 @@ import { TasksOnTags } from '@/models/tasksOnTags.model';
 import { TasksOnUsers } from '@/models/tasksOnUsers.model';
 import { UserModel } from '@/models/user.model';
 
-export enum Color {
+export enum TaskPriority {
   high = 'high',
   nomal = 'nomal',
   low = 'low',
 }
+
+registerEnumType(TaskPriority, { name: 'TaskPriority' });
 
 @ObjectType()
 export class TaskModel {
@@ -24,8 +26,8 @@ export class TaskModel {
   @Field()
     detail?: string;
 
-  @Field((type) => Color)
-    color!: Color;
+  @Field((type) => TaskPriority)
+    priority!: TaskPriority;
   
   @Field()
     startAt?: Date;
