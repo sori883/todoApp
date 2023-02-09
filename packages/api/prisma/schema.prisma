@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url = env("DATABASE_URL")
 }
 
@@ -11,11 +11,11 @@ model User {
   id Int @id @default(autoincrement())
   name String @db.VarChar(64)
   email String @db.VarChar(256)
-  emailVerified Boolean  @default(false) @db.Boolean
-  isAnonymous Boolean  @default(false) @db.Boolean
+  emailVerified Boolean  @default(false) @db.TinyInt
+  isAnonymous Boolean  @default(false) @db.TinyInt
   uid String @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Date
-  updatedAt DateTime @default(now()) @updatedAt @db.Date
+  createdAt DateTime @default(now()) @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   attachment Attachment[]
   task Task[]
@@ -33,11 +33,11 @@ model Task {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   detail String
-  startAt DateTime? @db.Time(6)
-  limitAt DateTime? @db.Time(6)
+  startAt DateTime? @db.DateTime(6)
+  limitAt DateTime? @db.DateTime(6)
   priority TaskPriority @default(nomal)
-  createdAt DateTime @default(now()) @db.Time(6)
-  updatedAt DateTime @default(now()) @updatedAt @db.Time(6)
+  createdAt DateTime @default(now()) @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   userId Int
   user User? @relation(fields: [userId], references: [id])
@@ -55,8 +55,8 @@ model Workspace {
   id Int @id @default(autoincrement())
   name String @db.VarChar(100)
   detail String
-  createdAt DateTime @default(now()) @db.Date
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+  createdAt DateTime @default(now()) @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   ImageId Int?
   attachment Attachment? @relation(fields: [ImageId], references: [id])
@@ -72,8 +72,8 @@ model Project {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   detail String?
-  createdAt DateTime @default(now()) @db.Timestamp(3)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+  createdAt DateTime @default(now()) @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   userId Int
   user User? @relation(fields: [userId], references: [id])
@@ -86,8 +86,8 @@ model Tag {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   color TagColor
-  createdAt DateTime @default(now()) @db.Timestamp(3)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+  createdAt DateTime @default(now()) @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
   
   workspaceId Int
   workspace Workspace? @relation(fields: [workspaceId], references: [id])
@@ -100,8 +100,8 @@ model Tag {
 model Comment {
   id Int @id @default(autoincrement())
   body String
-  createdAt DateTime @default(now()) @db.Timestamp(3)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+  createdAt DateTime @default(now()) @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   taskId Int
   task Task? @relation(fields: [taskId], references: [id]) 
@@ -113,8 +113,8 @@ model Attachment {
   id Int @id @default(autoincrement())
   name String @db.VarChar(100)
   path String @db.VarChar(250)
-  createdAt DateTime @default(now()) @db.Timestamp(3)
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(3)
+  createdAt DateTime @default(now()) @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   userId Int
   user User? @relation(fields: [userId], references: [id])

@@ -5,14 +5,18 @@ volumes:
 
 services:
 
-  postgresql:
-    image: postgres:15
+  mysql:
+    image: mysql:8.0
+    command: mysqld
     environment:
-      POSTGRES_PASSWORD: root
-      POSTGRES_USER: root
-      POSTGRES_DB: nest_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      MYSQL_DATABASE: todoApp
       TZ: 'Asia/Tokyo'
     ports:
-      - 5432:5432
+      - 4306:3306
     volumes:
-      - db-store:/var/lib/postgresql/
+      - db-store:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/init:/docker-entrypoint-initdb.d
