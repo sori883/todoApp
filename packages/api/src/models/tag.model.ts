@@ -5,6 +5,7 @@ import { UserModel } from '@/models/user.model';
 import { WorkspaceModel } from '@/models/workspace.model';
 
 export enum TagColor {
+  default = 'default',
   green = 'green',
   brown = 'brown',
   grey = 'grey',

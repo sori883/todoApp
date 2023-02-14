@@ -12,7 +12,9 @@ import { DateScalar } from '@/scalars/date.scalar';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<MercuriusDriverConfig>({
       driver: MercuriusDriver,
+      graphiql: process.env.NODE_ENV !== 'production',
       autoSchemaFile: 'schema.graphql',
+      sortSchema: true,
     }),
     AuthModule
   ],

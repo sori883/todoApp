@@ -2,19 +2,19 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 
 @InputType()
 export class AddUserInput {
-  @Field()
+  @Field(() => String, { nullable: false })
     name!: string;
 
-  @Field()
+  @Field(() => String, { nullable: false })
     email!: string;
 
-  @Field()
+  @Field(() => Boolean, { nullable: false })
     emailVerified!: boolean;
 
-  @Field()
+  @Field(() => Boolean, { nullable: false })
     isAnonymous!: boolean;
 
-  @Field()
+  @Field(() => String, { nullable: false })
     uid!: string;
 }
 

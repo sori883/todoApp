@@ -2,157 +2,157 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type CommentModel {
-  id: ID!
-  body: String!
-  createdAt: Date!
-  updatedAt: Date!
-  task: TaskModel!
-  user: UserModel!
-}
-
-type TasksOnTags {
-  taskId: ID!
-  tagId: ID!
-  task: TaskModel!
-  tag: TagModel!
-}
-
-type TagModel {
-  id: ID!
+input AddUserInput {
+  email: String!
+  emailVerified: Boolean!
+  isAnonymous: Boolean!
   name: String!
-  color: TagColor!
-  createdAt: Date!
-  updatedAt: Date!
-  workspace: WorkspaceModel!
-  user: UserModel!
-  tasksOnTags: [TasksOnTags!]
-}
-
-enum TagColor {
-  green
-  brown
-  grey
-  orange
-  yellow
-  blue
-  purple
-  red
-  pink
-  indigo
-}
-
-type UsersOnWorkspaces {
-  userId: ID!
-  workspaceId: ID!
-  user: UserModel!
-  workspace: WorkspaceModel!
-}
-
-type WorkspaceModel {
-  id: ID!
-  name: String!
-  detail: String
-  createdAt: Date!
-  updatedAt: Date!
-  image: [AttachmentModel!]
-  tags: [TagModel!]
-  projects: [ProjectModel!]
-  usersOnWorkspaces: [UsersOnWorkspaces!]!
-}
-
-type ProjectModel {
-  id: ID!
-  name: String!
-  detail: String
-  createdAt: Date!
-  updatedAt: Date!
-  workspace: WorkspaceModel!
-  user: UserModel!
-  task: TaskModel
-}
-
-type TasksOnUsers {
-  taskId: ID!
-  userId: ID!
-  task: TaskModel!
-  user: UserModel!
-}
-
-type TaskModel {
-  id: ID!
-  name: String!
-  detail: String
-  priority: TaskPriority!
-  startAt: Date
-  limitAt: Date
-  createdAt: Date!
-  updatedAt: Date!
-  user: UserModel!
-  project: ProjectModel!
-  comments: [CommentModel!]
-  attachments: [AttachmentModel!]
-  tasksOnTags: [TasksOnTags!]
-  tasksOnUsers: [TasksOnUsers!]
-}
-
-enum TaskPriority {
-  high
-  nomal
-  low
+  uid: String!
 }
 
 type AttachmentModel {
+  createdAt: Date!
   id: ID!
   name: String!
   path: String!
-  createdAt: Date!
-  updatedAt: Date!
   task: TaskModel
+  updatedAt: Date!
   user: UserModel!
   workspace: WorkspaceModel
 }
 
-type UserModel {
-  id: ID!
-  name: String!
-  email: String!
-  emailVerified: Boolean!
-  isAnonymous: Boolean!
-  uid: Boolean!
+type CommentModel {
+  body: String!
   createdAt: Date!
+  id: ID!
+  task: TaskModel!
   updatedAt: Date!
-  tasks: [TaskModel!]!
-  comments: [CommentModel!]!
-  attachments: [AttachmentModel!]!
-  projects: [ProjectModel!]!
-  tags: [TagModel!]!
-  usersOnWorkspaces: [UsersOnWorkspaces!]!
-  tasksOnUsers: [TasksOnUsers!]
+  user: UserModel!
 }
 
 """Date custom scalar type"""
 scalar Date
 
+type Mutation {
+  deleteUser(id: ID!): UserModel
+  saveUser(user: AddUserInput!): UserModel!
+  updateUser(user: UpdateUserInput!): UserModel!
+}
+
+type ProjectModel {
+  createdAt: Date!
+  detail: String
+  id: ID!
+  name: String!
+  task: TaskModel
+  updatedAt: Date!
+  user: UserModel!
+  workspace: WorkspaceModel!
+}
+
 type Query {
   user(id: ID!): UserModel
 }
 
-type Mutation {
-  saveUser(user: AddUserInput!): UserModel!
-  updateUser(user: UpdateUserInput!): UserModel!
-  deleteUser(id: ID!): UserModel
+enum TagColor {
+  blue
+  brown
+  green
+  grey
+  indigo
+  orange
+  pink
+  purple
+  red
+  yellow
 }
 
-input AddUserInput {
+type TagModel {
+  color: TagColor!
+  createdAt: Date!
+  id: ID!
   name: String!
-  email: String!
-  emailVerified: Boolean!
-  isAnonymous: Boolean!
-  uid: String!
+  tasksOnTags: [TasksOnTags!]
+  updatedAt: Date!
+  user: UserModel!
+  workspace: WorkspaceModel!
+}
+
+type TaskModel {
+  attachments: [AttachmentModel!]
+  comments: [CommentModel!]
+  createdAt: Date!
+  detail: String
+  id: ID!
+  limitAt: Date
+  name: String!
+  priority: TaskPriority!
+  project: ProjectModel!
+  startAt: Date
+  tasksOnTags: [TasksOnTags!]
+  tasksOnUsers: [TasksOnUsers!]
+  updatedAt: Date!
+  user: UserModel!
+}
+
+enum TaskPriority {
+  high
+  low
+  nomal
+}
+
+type TasksOnTags {
+  tag: TagModel!
+  tagId: ID!
+  task: TaskModel!
+  taskId: ID!
+}
+
+type TasksOnUsers {
+  task: TaskModel!
+  taskId: ID!
+  user: UserModel!
+  userId: ID!
 }
 
 input UpdateUserInput {
   id: ID!
   name: String!
+}
+
+type UserModel {
+  attachments: [AttachmentModel!]!
+  comments: [CommentModel!]!
+  createdAt: Date!
+  email: String!
+  emailVerified: Boolean!
+  id: ID!
+  isAnonymous: Boolean!
+  name: String!
+  projects: [ProjectModel!]!
+  tags: [TagModel!]!
+  tasks: [TaskModel!]!
+  tasksOnUsers: [TasksOnUsers!]
+  uid: Boolean!
+  updatedAt: Date!
+  usersOnWorkspaces: [UsersOnWorkspaces!]!
+}
+
+type UsersOnWorkspaces {
+  user: UserModel!
+  userId: ID!
+  workspace: WorkspaceModel!
+  workspaceId: ID!
+}
+
+type WorkspaceModel {
+  createdAt: Date!
+  detail: String
+  id: ID!
+  image: [AttachmentModel!]
+  name: String!
+  projects: [ProjectModel!]
+  tags: [TagModel!]
+  updatedAt: Date!
+  usersOnWorkspaces: [UsersOnWorkspaces!]!
 }
