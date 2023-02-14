@@ -2,9 +2,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator nestgraphql {
+  provider = "prisma-nestjs-graphql"
+  output = "../src/@generated/prisma-nestjs-graphql"
+ }
+
 datasource db {
   provider = "mysql"
   url = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -26,13 +32,13 @@ model User {
   tasksOnUsers TasksOnUsers[]
   usersOnWorkspaces UsersOnWorkspaces[]
 
-  @@unique([uid])
+  @@unique([uid, email])
 }
 
 model Task {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
-  detail String
+  detail String?
   startAt DateTime? @db.DateTime(6)
   limitAt DateTime? @db.DateTime(6)
   priority TaskPriority @default(nomal)
@@ -40,26 +46,29 @@ model Task {
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   userId Int
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onUpdate: NoAction)
 
   projectId Int
-  project Project? @relation(fields: [projectId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id], onUpdate: NoAction)
 
   attachment Attachment[]
   comment Comment[]
   tasksOnUsers TasksOnUsers[]
   taskOnTags TasksOnTags[]
+
+  @@index([projectId])
+  @@index([userId])
 }
 
 model Workspace {
   id Int @id @default(autoincrement())
   name String @db.VarChar(100)
-  detail String
+  detail String?
   createdAt DateTime @default(now()) @db.DateTime(6)
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   ImageId Int?
-  attachment Attachment? @relation(fields: [ImageId], references: [id])
+  attachment Attachment? @relation(fields: [ImageId], references: [id], onUpdate: NoAction)
 
   tag Tag[]
   project Project[]
@@ -76,25 +85,31 @@ model Project {
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   userId Int
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onUpdate: NoAction)
   workspaceId  Int
-  workspace Workspace? @relation(fields: [workspaceId], references: [id])
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onUpdate: NoAction)
   task Task[]
+
+  @@index([userId])
+  @@index([workspaceId])
 }
 
 model Tag {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
-  color TagColor
+  color TagColor @default(default)
   createdAt DateTime @default(now()) @db.DateTime(6)
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
   
   workspaceId Int
-  workspace Workspace? @relation(fields: [workspaceId], references: [id])
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onUpdate: NoAction)
   userId Int
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onUpdate: NoAction)
 
   taskOnTags TasksOnTags[]
+
+  @@index([workspaceId])
+  @@index([userId])
 }
 
 model Comment {
@@ -104,9 +119,12 @@ model Comment {
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   taskId Int
-  task Task? @relation(fields: [taskId], references: [id]) 
+  task Task? @relation(fields: [taskId], references: [id], onUpdate: NoAction) 
   userId Int
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onUpdate: NoAction)
+
+  @@index([taskId])
+  @@index([userId])
 }
 
 model Attachment {
@@ -117,40 +135,48 @@ model Attachment {
   updatedAt DateTime @default(now()) @updatedAt @db.DateTime(6)
 
   userId Int
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onUpdate: NoAction)
   taskId Int?
-  task Task? @relation(fields: [taskId], references: [id])
+  task Task? @relation(fields: [taskId], references: [id], onUpdate: NoAction)
 
   workspace Workspace?
 
   @@unique([path])
+  @@index([userId])
+  @@index([taskId])
 }
 
 model TasksOnTags {
   taskId Int
   tagId Int
-  task Task @relation(fields: [taskId], references: [id])
-  tag Tag @relation(fields: [tagId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onUpdate: NoAction)
+  tag Tag @relation(fields: [tagId], references: [id], onUpdate: NoAction)
 
   @@id([taskId, tagId])
+  @@index([taskId])
+  @@index([tagId])
 }
 
 model TasksOnUsers {
   taskId Int
   userId Int
-  task Task @relation(fields: [taskId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onUpdate: NoAction)
+  user User @relation(fields: [userId], references: [id], onUpdate: NoAction)
 
   @@id([taskId, userId])
+  @@index([taskId])
+  @@index([userId])
 }
 
 model UsersOnWorkspaces {
   userId Int
   workspaceId Int
-  user User @relation(fields: [userId], references: [id])
-  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  user User @relation(fields: [userId], references: [id], onUpdate: NoAction)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onUpdate: NoAction)
 
   @@id([userId, workspaceId])
+  @@index([userId])
+  @@index([workspaceId])
 }
 
 enum TaskPriority {
@@ -160,6 +186,7 @@ enum TaskPriority {
 }
 
 enum TagColor {
+  default
   green
   brown
   grey
