@@ -7,12 +7,13 @@ input AddUserInput {
   emailVerified: Boolean!
   isAnonymous: Boolean!
   name: String!
+  photoUrl: String
   uid: String!
 }
 
 type AttachmentModel {
   createdAt: Date!
-  id: ID!
+  id: Int!
   name: String!
   path: String!
   task: TaskModel
@@ -24,7 +25,7 @@ type AttachmentModel {
 type CommentModel {
   body: String!
   createdAt: Date!
-  id: ID!
+  id: Int!
   task: TaskModel!
   updatedAt: Date!
   user: UserModel!
@@ -34,15 +35,15 @@ type CommentModel {
 scalar Date
 
 type Mutation {
-  deleteUser(id: ID!): UserModel
-  saveUser(user: AddUserInput!): UserModel!
+  deleteUser(id: Int!): UserModel
+  saveUser(user: AddUserInput!): UserModel
   updateUser(user: UpdateUserInput!): UserModel!
 }
 
 type ProjectModel {
   createdAt: Date!
   detail: String
-  id: ID!
+  id: Int!
   name: String!
   task: TaskModel
   updatedAt: Date!
@@ -51,12 +52,14 @@ type ProjectModel {
 }
 
 type Query {
-  user(id: ID!): UserModel
+  findCurrentUser: UserModel!
+  findUserById(id: Int!): UserModel
 }
 
 enum TagColor {
   blue
   brown
+  default
   green
   grey
   indigo
@@ -70,7 +73,7 @@ enum TagColor {
 type TagModel {
   color: TagColor!
   createdAt: Date!
-  id: ID!
+  id: Int!
   name: String!
   tasksOnTags: [TasksOnTags!]
   updatedAt: Date!
@@ -83,7 +86,7 @@ type TaskModel {
   comments: [CommentModel!]
   createdAt: Date!
   detail: String
-  id: ID!
+  id: Int!
   limitAt: Date
   name: String!
   priority: TaskPriority!
@@ -103,20 +106,20 @@ enum TaskPriority {
 
 type TasksOnTags {
   tag: TagModel!
-  tagId: ID!
+  tagId: Int!
   task: TaskModel!
-  taskId: ID!
+  taskId: Int!
 }
 
 type TasksOnUsers {
   task: TaskModel!
-  taskId: ID!
+  taskIc: Int!
   user: UserModel!
-  userId: ID!
+  userId: Int!
 }
 
 input UpdateUserInput {
-  id: ID!
+  id: Int!
   name: String!
 }
 
@@ -126,29 +129,30 @@ type UserModel {
   createdAt: Date!
   email: String!
   emailVerified: Boolean!
-  id: ID!
+  id: Int!
   isAnonymous: Boolean!
   name: String!
+  photoUrl: String
   projects: [ProjectModel!]!
   tags: [TagModel!]!
   tasks: [TaskModel!]!
   tasksOnUsers: [TasksOnUsers!]
-  uid: Boolean!
+  uid: String!
   updatedAt: Date!
   usersOnWorkspaces: [UsersOnWorkspaces!]!
 }
 
 type UsersOnWorkspaces {
   user: UserModel!
-  userId: ID!
+  userId: Int!
   workspace: WorkspaceModel!
-  workspaceId: ID!
+  workspaceId: Int!
 }
 
 type WorkspaceModel {
+  Id: Int!
   createdAt: Date!
   detail: String
-  id: ID!
   image: [AttachmentModel!]
   name: String!
   projects: [ProjectModel!]

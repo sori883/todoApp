@@ -6,10 +6,12 @@ CREATE TABLE `User` (
     `emailVerified` BOOLEAN NOT NULL DEFAULT false,
     `isAnonymous` BOOLEAN NOT NULL DEFAULT false,
     `uid` VARCHAR(255) NOT NULL,
+    `photoUrl` VARCHAR(255) NULL,
     `createdAt` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `updatedAt` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
 
     UNIQUE INDEX `User_uid_key`(`uid`),
+    UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -17,7 +19,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Task` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `detail` VARCHAR(191) NOT NULL,
+    `detail` VARCHAR(191) NULL,
     `startAt` DATETIME(6) NULL,
     `limitAt` DATETIME(6) NULL,
     `priority` ENUM('high', 'nomal', 'low') NOT NULL DEFAULT 'nomal',
@@ -26,6 +28,8 @@ CREATE TABLE `Task` (
     `userId` INTEGER NOT NULL,
     `projectId` INTEGER NOT NULL,
 
+    INDEX `Task_projectId_idx`(`projectId`),
+    INDEX `Task_userId_idx`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -33,7 +37,7 @@ CREATE TABLE `Task` (
 CREATE TABLE `Workspace` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
-    `detail` VARCHAR(191) NOT NULL,
+    `detail` VARCHAR(191) NULL,
     `createdAt` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `updatedAt` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `ImageId` INTEGER NULL,
@@ -52,6 +56,8 @@ CREATE TABLE `Project` (
     `userId` INTEGER NOT NULL,
     `workspaceId` INTEGER NOT NULL,
 
+    INDEX `Project_userId_idx`(`userId`),
+    INDEX `Project_workspaceId_idx`(`workspaceId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -59,12 +65,14 @@ CREATE TABLE `Project` (
 CREATE TABLE `Tag` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `color` ENUM('green', 'brown', 'grey', 'orange', 'yellow', 'blue', 'purple', 'red', 'pink', 'indigo') NOT NULL,
+    `color` ENUM('default', 'green', 'brown', 'grey', 'orange', 'yellow', 'blue', 'purple', 'red', 'pink', 'indigo') NOT NULL DEFAULT 'default',
     `createdAt` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `updatedAt` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `workspaceId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
 
+    INDEX `Tag_workspaceId_idx`(`workspaceId`),
+    INDEX `Tag_userId_idx`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -77,6 +85,8 @@ CREATE TABLE `Comment` (
     `taskId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
 
+    INDEX `Comment_taskId_idx`(`taskId`),
+    INDEX `Comment_userId_idx`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -90,6 +100,8 @@ CREATE TABLE `Attachment` (
     `userId` INTEGER NOT NULL,
     `taskId` INTEGER NULL,
 
+    INDEX `Attachment_userId_idx`(`userId`),
+    INDEX `Attachment_taskId_idx`(`taskId`),
     UNIQUE INDEX `Attachment_path_key`(`path`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -99,6 +111,8 @@ CREATE TABLE `TasksOnTags` (
     `taskId` INTEGER NOT NULL,
     `tagId` INTEGER NOT NULL,
 
+    INDEX `TasksOnTags_taskId_idx`(`taskId`),
+    INDEX `TasksOnTags_tagId_idx`(`tagId`),
     PRIMARY KEY (`taskId`, `tagId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -107,6 +121,8 @@ CREATE TABLE `TasksOnUsers` (
     `taskId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
 
+    INDEX `TasksOnUsers_taskId_idx`(`taskId`),
+    INDEX `TasksOnUsers_userId_idx`(`userId`),
     PRIMARY KEY (`taskId`, `userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -115,56 +131,7 @@ CREATE TABLE `UsersOnWorkspaces` (
     `userId` INTEGER NOT NULL,
     `workspaceId` INTEGER NOT NULL,
 
+    INDEX `UsersOnWorkspaces_userId_idx`(`userId`),
+    INDEX `UsersOnWorkspaces_workspaceId_idx`(`workspaceId`),
     PRIMARY KEY (`userId`, `workspaceId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- AddForeignKey
-ALTER TABLE `Task` ADD CONSTRAINT `Task_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Task` ADD CONSTRAINT `Task_projectId_fkey` FOREIGN KEY (`projectId`) REFERENCES `Project`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Workspace` ADD CONSTRAINT `Workspace_ImageId_fkey` FOREIGN KEY (`ImageId`) REFERENCES `Attachment`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Project` ADD CONSTRAINT `Project_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Project` ADD CONSTRAINT `Project_workspaceId_fkey` FOREIGN KEY (`workspaceId`) REFERENCES `Workspace`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Tag` ADD CONSTRAINT `Tag_workspaceId_fkey` FOREIGN KEY (`workspaceId`) REFERENCES `Workspace`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Tag` ADD CONSTRAINT `Tag_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comment` ADD CONSTRAINT `Comment_taskId_fkey` FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comment` ADD CONSTRAINT `Comment_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Attachment` ADD CONSTRAINT `Attachment_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Attachment` ADD CONSTRAINT `Attachment_taskId_fkey` FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `TasksOnTags` ADD CONSTRAINT `TasksOnTags_taskId_fkey` FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `TasksOnTags` ADD CONSTRAINT `TasksOnTags_tagId_fkey` FOREIGN KEY (`tagId`) REFERENCES `Tag`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `TasksOnUsers` ADD CONSTRAINT `TasksOnUsers_taskId_fkey` FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `TasksOnUsers` ADD CONSTRAINT `TasksOnUsers_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `UsersOnWorkspaces` ADD CONSTRAINT `UsersOnWorkspaces_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `UsersOnWorkspaces` ADD CONSTRAINT `UsersOnWorkspaces_workspaceId_fkey` FOREIGN KEY (`workspaceId`) REFERENCES `Workspace`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

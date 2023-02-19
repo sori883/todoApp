@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { AttachmentModel } from '@/models/attachment.model';
 import { CommentModel } from '@/models/comment.model';
@@ -10,7 +10,7 @@ import { UsersOnWorkspaces } from '@/models/usersOnWorkspaces.model';
 
 @ObjectType()
 export class UserModel {
-  @Field((type) => ID)
+  @Field((type) => Int)
     id!: number;
 
   @Field()
@@ -18,6 +18,9 @@ export class UserModel {
 
   @Field()
     email!: string;
+  
+  @Field()
+    photoUrl?: string;
 
   @Field()
     emailVerified!: boolean;
@@ -26,7 +29,7 @@ export class UserModel {
     isAnonymous!: boolean;
 
   @Field()
-    uid!: boolean;
+    uid!: string;
 
   @Field()
     createdAt!: Date;

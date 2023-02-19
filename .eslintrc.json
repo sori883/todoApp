@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["node_modules", ".next", "dist","$path.ts","@generated"],
+  "ignorePatterns": ["node_modules", ".next", "dist","$path.ts","@generated","generated.ts"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -27,6 +27,7 @@
     "@typescript-eslint/explicit-function-return-type": ["off"],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "sort-imports": ["error", { "ignoreDeclarationSort": true }],
+    "react-hooks/exhaustive-deps": "off",
     "import/order": [
       "error",
       {

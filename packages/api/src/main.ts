@@ -16,9 +16,10 @@ export let firebaseApp: FirebaseApp = undefined;
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter()
+    new FastifyAdapter(),
   );
-  
+
+  app.enableCors();
   
   // firebase init
   const configService: ConfigService = app.get(ConfigService);
@@ -45,6 +46,6 @@ async function bootstrap() {
   });
 
   await app.listen(3500);
-  console.log("http://localhost:3500/graphql");
+  console.log("http://localhost:3500/graphiql");
 }
 bootstrap();

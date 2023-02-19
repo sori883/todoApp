@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 import { AttachmentModel } from '@/models/attachment.model';
 import { CommentModel } from '@/models/comment.model';
@@ -17,7 +17,7 @@ registerEnumType(TaskPriority, { name: 'TaskPriority' });
 
 @ObjectType()
 export class TaskModel {
-  @Field((type) => ID)
+  @Field((type) => Int)
     id!: number;
 
   @Field()

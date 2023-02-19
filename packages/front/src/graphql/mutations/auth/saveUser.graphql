@@ -1,0 +1,10 @@
+mutation saveUser($user: AddUserInput!) {
+  saveUser(user: $user) {
+    id
+    name
+    email
+    emailVerified
+    isAnonymous
+    uid
+  }
+}

@@ -8,6 +8,7 @@ import { RecoilRoot } from 'recoil';
 import { SiteHead } from 'components/nonVisual/siteHead';
 import createEmotionCache from 'mui/createEmotionCache';
 import theme from 'mui/theme';
+import { AppUserInit } from 'provider/appUserInit';
 
 import 'styles/globals.css';
 
@@ -17,6 +18,10 @@ interface MyAppProps extends AppProps {
 }
 
 function AppInit():null {
+  // 現時点のユーザ情報を
+  // stateに保持するための共通処理
+  AppUserInit();
+  
   return null;
 }
 

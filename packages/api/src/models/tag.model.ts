@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, registerEnumType  } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType  } from '@nestjs/graphql';
 
 import { TasksOnTags } from '@/models/tasksOnTags.model';
 import { UserModel } from '@/models/user.model';
@@ -22,7 +22,7 @@ registerEnumType(TagColor, { name: 'TagColor' });
 
 @ObjectType()
 export class TagModel {
-  @Field((type) => ID)
+  @Field((type) => Int)
     id!: number;
 
   @Field()

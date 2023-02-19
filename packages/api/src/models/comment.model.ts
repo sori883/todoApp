@@ -1,11 +1,11 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
 
 @ObjectType()
 export class CommentModel {
-  @Field((type) => ID)
+  @Field((type) => Int)
     id!: number;
 
   @Field()

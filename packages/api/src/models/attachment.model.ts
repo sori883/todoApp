@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
@@ -6,7 +6,7 @@ import { WorkspaceModel } from '@/models/workspace.model';
 
 @ObjectType()
 export class AttachmentModel {
-  @Field((type) => ID)
+  @Field((type) => Int)
     id!: number;
 
   @Field()

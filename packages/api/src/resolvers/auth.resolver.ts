@@ -1,7 +1,10 @@
-import { Inject } from '@nestjs/common';
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Inject, UseGuards } from '@nestjs/common';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { DecodedIdToken } from 'firebase-admin/auth';
 
+import { UserParam } from '@/decorator/user.decorator';
 import { AddUserInput, UpdateUserInput } from '@/dto/user.dto';
+import { AuthGuard } from '@/guard/auth.guard';
 import { UserModel } from '@/models/user.model';
 import { AuthService } from '@/services/auth.service';
 
@@ -9,12 +12,19 @@ import { AuthService } from '@/services/auth.service';
 export class AuthResolver {
   constructor(@Inject(AuthService) private authService: AuthService) {}
 
-  @Query((returns) => UserModel, { nullable: true })
-  async user(@Args("id", { type: () => ID }) id: number) {
-    return await this.authService.findOne(id);
+  @UseGuards(AuthGuard)
+  @Query((returns) => UserModel, { nullable: false })
+  async findCurrentUser(@UserParam() user: DecodedIdToken) {
+    return await this.authService.findOneByUid(user.uid);
   }
 
-  @Mutation((returns) => UserModel)
+  @UseGuards(AuthGuard)
+  @Query((returns) => UserModel, { nullable: true })
+  async findUserById(@Args('id', { type: () => Int }) id: number) {
+    return await this.authService.findOneById(id);
+  }
+
+  @Mutation((returns) => UserModel, { nullable: true })
   async saveUser(@Args('user') user: AddUserInput) {
     return await this.authService.save(user);
   }
@@ -25,7 +35,7 @@ export class AuthResolver {
   }
 
   @Mutation((returns) => UserModel, { nullable: true })
-  async deleteUser(@Args('id', { type: () => ID }) id: number) {
+  async deleteUser(@Args('id', { type: () => Int }) id: number) {
     return await this.authService.delete(id);
   }
 }

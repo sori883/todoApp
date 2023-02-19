@@ -1,14 +1,14 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { UserModel } from '@/models/user.model';
 import { WorkspaceModel } from '@/models/workspace.model';
 
 @ObjectType()
 export class UsersOnWorkspaces {
-  @Field((type) => ID)
+  @Field((type) => Int)
     userId!: number;
 
-  @Field((type) => ID)
+  @Field((type) => Int)
     workspaceId!: number;
 
   @Field((type) => UserModel)

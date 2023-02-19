@@ -3,7 +3,7 @@ import { setContext } from "@apollo/client/link/context";
 
 export const createApolloClient = (token: string | undefined) => {
   const httpLink = createHttpLink({
-    uri: `${process.env.GRAPHQL_ENDPOINT}`,
+    uri: `${process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT}`,
   });
   
   const authLink = setContext((_, { headers }) => {

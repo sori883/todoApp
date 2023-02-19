@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { AttachmentModel } from '@/models/attachment.model';
 import { ProjectModel } from '@/models/project.model';
@@ -7,8 +7,8 @@ import { UsersOnWorkspaces } from '@/models/usersOnWorkspaces.model';
 
 @ObjectType()
 export class WorkspaceModel {
-  @Field((type) => ID)
-    id!: number;
+  @Field((type) => Int)
+    Id!: number;
 
   @Field()
     name!: string;

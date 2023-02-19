@@ -1,14 +1,14 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { TagModel } from '@/models/tag.model';
 import { TaskModel } from '@/models/task.model';
 
 @ObjectType()
 export class TasksOnTags {
-  @Field((type) => ID)
+  @Field((type) => Int)
     taskId!: number;
 
-  @Field((type) => ID)
+  @Field((type) => Int)
     tagId!: number;
 
   @Field((type) => TaskModel)

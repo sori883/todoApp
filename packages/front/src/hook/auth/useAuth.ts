@@ -5,6 +5,7 @@ import {
 } from 'firebase/auth';
 import { useSetRecoilState } from 'recoil';
 
+import { saveUser } from 'domain/auth/saveUser';
 import { firebaseAuth } from 'lib/firebase';
 import { currentUserState } from 'states/atoms/user';
 
@@ -16,7 +17,8 @@ export const useAuth = () => {
     const res = await signInWithPopup(firebaseAuth, provider);
     // ユーザ情報をセット
     setCurrentUser(res.user);
-    console.log(res.user);
+    // ユーザを作成
+    saveUser(res.user);
   };
   
   const logout = () => {

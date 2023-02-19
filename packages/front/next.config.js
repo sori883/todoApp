@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig =  {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withInterceptStdout = require('next-intercept-stdout');
+
+const nextConfig = {
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
@@ -14,9 +17,12 @@ const nextConfig =  {
 };
 
 const buildConfig = _phase => {
-  const config = {
-    ...nextConfig
-  };
+  const config = withInterceptStdout(
+    {
+      ...nextConfig
+    },
+    (text) => (text.includes('Duplicate atom key') ? '' : text),
+  );
   return config;
 };
 

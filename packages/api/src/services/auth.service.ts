@@ -25,11 +25,19 @@ export class AuthService {
     }
   }
 
-  async findOne(id: number) {
+  async findOneById(id: number) {
     return await this.prisma.user.findUnique({ where: { id } });
   }
 
+  async findOneByUid(uid: string) {
+    return await this.prisma.user.findUnique({ where: { uid }});
+  }
+
   async save(payload: AddUserInput) {
+    // ユーザが存在する場合は、追加しない
+    const user = await this.prisma.user.findUnique({ where: { uid: payload.uid }});
+    if (user) return;
+
     return await this.prisma.user.create({ data: payload });
   }
 
