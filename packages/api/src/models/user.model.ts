@@ -8,7 +8,7 @@ import { TaskModel } from '@/models/task.model';
 import { TasksOnUsers } from '@/models/tasksOnUsers.model';
 import { UsersOnWorkspaces } from '@/models/usersOnWorkspaces.model';
 
-@ObjectType()
+@ObjectType('UserModel')
 export class UserModel {
   @Field((type) => Int)
     id!: number;
@@ -37,19 +37,19 @@ export class UserModel {
   @Field()
     updatedAt!: Date;
 
-  @Field((type) => [TaskModel])
+  @Field((type) => TaskModel)
     tasks!: TaskModel[];
     
-  @Field((type) => [CommentModel])
+  @Field((type) => CommentModel)
     comments!: CommentModel[];
 
-  @Field((type) => [AttachmentModel])
+  @Field((type) => AttachmentModel)
     attachments!: AttachmentModel[];
   
-  @Field((type) => [ProjectModel])
+  @Field((type) => ProjectModel)
     projects!: ProjectModel[];  
     
-  @Field((type) => [TagModel])
+  @Field((type) => TagModel)
     tags!: TagModel[];
 
   @Field((type) => [UsersOnWorkspaces])

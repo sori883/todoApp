@@ -3,9 +3,9 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { AttachmentModel } from '@/models/attachment.model';
 import { ProjectModel } from '@/models/project.model';
 import { TagModel } from '@/models/tag.model';
-import { UsersOnWorkspaces } from '@/models/usersOnWorkspaces.model';
+import { UserModel } from '@/models/user.model';
 
-@ObjectType()
+@ObjectType('WorkspaceModel')
 export class WorkspaceModel {
   @Field((type) => Int)
     Id!: number;
@@ -22,15 +22,15 @@ export class WorkspaceModel {
   @Field()
     updatedAt!: Date;
 
-  @Field((type) => [AttachmentModel])
+  @Field((type) => AttachmentModel)
     image?: AttachmentModel;
 
-  @Field((type) => [TagModel])
+  @Field((type) => TagModel)
     tags?: TagModel[];
   
-  @Field((type) => [ProjectModel])
+  @Field((type) => ProjectModel)
     projects?: ProjectModel[];
 
-  @Field((type) => [UsersOnWorkspaces])
-    usersOnWorkspaces!: UsersOnWorkspaces[];
+  @Field((type) => UserModel)
+    user!: UserModel[];
 }

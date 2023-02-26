@@ -4,7 +4,6 @@ import { AttachmentModel } from '@/models/attachment.model';
 import { CommentModel } from '@/models/comment.model';
 import { ProjectModel } from '@/models/project.model';
 import { TasksOnTags } from '@/models/tasksOnTags.model';
-import { TasksOnUsers } from '@/models/tasksOnUsers.model';
 import { UserModel } from '@/models/user.model';
 
 export enum TaskPriority {
@@ -15,7 +14,7 @@ export enum TaskPriority {
 
 registerEnumType(TaskPriority, { name: 'TaskPriority' });
 
-@ObjectType()
+@ObjectType('TaskModel')
 export class TaskModel {
   @Field((type) => Int)
     id!: number;
@@ -47,15 +46,15 @@ export class TaskModel {
   @Field((type) => ProjectModel)
     project!: ProjectModel;
   
-  @Field((type) => [CommentModel])
+  @Field((type) => CommentModel)
     comments?: CommentModel[];
 
-  @Field((type) => [AttachmentModel])
+  @Field((type) => AttachmentModel)
     attachments?: AttachmentModel[];
   
   @Field((type) => [TasksOnTags])
-    tasksOnTags?: TasksOnTags[];
+    tags?: TasksOnTags[];
   
-  @Field((type) => [TasksOnUsers])
-    tasksOnUsers?: TasksOnUsers[];
+  @Field((type) => UserModel)
+    userAssign?: UserModel[];
 }

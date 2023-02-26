@@ -15,10 +15,10 @@ export const useAuth = () => {
   const googleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const res = await signInWithPopup(firebaseAuth, provider);
-    // ユーザ情報をセット
-    setCurrentUser(res.user);
     // ユーザを作成
-    saveUser(res.user);
+    const data = await saveUser(res.user);
+    // ユーザ情報をセット
+    setCurrentUser(data);
   };
   
   const logout = () => {

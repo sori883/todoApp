@@ -3,7 +3,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { TagModel } from '@/models/tag.model';
 import { TaskModel } from '@/models/task.model';
 
-@ObjectType()
+@ObjectType('TasksOnTags')
 export class TasksOnTags {
   @Field((type) => Int)
     taskId!: number;

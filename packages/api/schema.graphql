@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddAttachmentInput {
+  name: String!
+  path: String!
+}
+
 input AddUserInput {
   email: String!
   emailVerified: Boolean!
@@ -35,8 +40,11 @@ type CommentModel {
 scalar Date
 
 type Mutation {
+  deleteAttachyment(id: Int!): AttachmentModel
   deleteUser(id: Int!): UserModel
+  saveAttachment(attachment: AddAttachmentInput!): AttachmentModel
   saveUser(user: AddUserInput!): UserModel
+  updateAttachment(attachment: UpdateAttachmentInput!): AttachmentModel!
   updateUser(user: UpdateUserInput!): UserModel!
 }
 
@@ -53,7 +61,8 @@ type ProjectModel {
 
 type Query {
   findCurrentUser: UserModel!
-  findUserById(id: Int!): UserModel
+  findUserById(id: Int!): AttachmentModel
+  findUserByPath(path: String!): AttachmentModel
 }
 
 enum TagColor {
@@ -116,6 +125,12 @@ type TasksOnUsers {
   taskIc: Int!
   user: UserModel!
   userId: Int!
+}
+
+input UpdateAttachmentInput {
+  id: Int!
+  name: String!
+  path: String!
 }
 
 input UpdateUserInput {

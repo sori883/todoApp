@@ -4,7 +4,7 @@ import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
 import { WorkspaceModel } from '@/models/workspace.model';
 
-@ObjectType()
+@ObjectType('ProjectModel')
 export class ProjectModel {
   @Field((type) => Int)
     id!: number;

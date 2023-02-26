@@ -3,7 +3,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
 
-@ObjectType()
+@ObjectType('CommentModel')
 export class CommentModel {
   @Field((type) => Int)
     id!: number;

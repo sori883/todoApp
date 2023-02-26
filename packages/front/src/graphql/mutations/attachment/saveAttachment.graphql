@@ -1,0 +1,7 @@
+mutation saveAttachment($attachment: [AddAttachmentInput!]) {
+  saveAttachment(attachment: $attachment) {
+    id
+    name
+    path
+  }
+}

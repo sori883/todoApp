@@ -17,6 +17,11 @@ export type Scalars = {
   Date: number;
 };
 
+export type AddAttachmentInput = {
+  name: Scalars['String'];
+  path: Scalars['String'];
+};
+
 export type AddUserInput = {
   email: Scalars['String'];
   emailVerified: Scalars['Boolean'];
@@ -47,9 +52,17 @@ export type CommentModel = {
 };
 
 export type Mutation = {
+  deleteAttachyment?: Maybe<AttachmentModel>;
   deleteUser?: Maybe<UserModel>;
-  saveUser: UserModel;
+  saveAttachment?: Maybe<AttachmentModel>;
+  saveUser?: Maybe<UserModel>;
+  updateAttachment: AttachmentModel;
   updateUser: UserModel;
+};
+
+
+export type MutationDeleteAttachymentArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -58,8 +71,18 @@ export type MutationDeleteUserArgs = {
 };
 
 
+export type MutationSaveAttachmentArgs = {
+  attachment: AddAttachmentInput;
+};
+
+
 export type MutationSaveUserArgs = {
   user: AddUserInput;
+};
+
+
+export type MutationUpdateAttachmentArgs = {
+  attachment: UpdateAttachmentInput;
 };
 
 
@@ -80,12 +103,18 @@ export type ProjectModel = {
 
 export type Query = {
   findCurrentUser: UserModel;
-  findUserById?: Maybe<UserModel>;
+  findUserById?: Maybe<AttachmentModel>;
+  findUserByPath?: Maybe<AttachmentModel>;
 };
 
 
 export type QueryFindUserByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryFindUserByPathArgs = {
+  path: Scalars['String'];
 };
 
 export enum TagColor {
@@ -150,6 +179,12 @@ export type TasksOnUsers = {
   userId: Scalars['Int'];
 };
 
+export type UpdateAttachmentInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  path: Scalars['String'];
+};
+
 export type UpdateUserInput = {
   id: Scalars['Int'];
   name: Scalars['String'];
@@ -193,17 +228,24 @@ export type WorkspaceModel = {
   usersOnWorkspaces: Array<UsersOnWorkspaces>;
 };
 
+export type SaveAttachmentMutationVariables = Exact<{
+  attachment: AddAttachmentInput;
+}>;
+
+
+export type SaveAttachmentMutation = { saveAttachment?: { id: number, name: string, path: string } | null };
+
 export type SaveUserMutationVariables = Exact<{
   user: AddUserInput;
 }>;
 
 
-export type SaveUserMutation = { saveUser: { id: number, name: string, email: string, emailVerified: boolean, isAnonymous: boolean, uid: string } };
+export type SaveUserMutation = { saveUser?: { id: number, name: string, email: string, emailVerified: boolean, isAnonymous: boolean, uid: string } | null };
 
 export type FindCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindCurrentUserQuery = { findCurrentUser: { name: string } };
+export type FindCurrentUserQuery = { findCurrentUser: { id: number, name: string, email: string, emailVerified: boolean, isAnonymous: boolean, uid: string } };
 
 export type FindUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -213,6 +255,41 @@ export type FindUserByIdQueryVariables = Exact<{
 export type FindUserByIdQuery = { findUserById?: { name: string } | null };
 
 
+export const SaveAttachmentDocument = gql`
+    mutation saveAttachment($attachment: AddAttachmentInput!) {
+  saveAttachment(attachment: $attachment) {
+    id
+    name
+    path
+  }
+}
+    `;
+export type SaveAttachmentMutationFn = Apollo.MutationFunction<SaveAttachmentMutation, SaveAttachmentMutationVariables>;
+
+/**
+ * __useSaveAttachmentMutation__
+ *
+ * To run a mutation, you first call `useSaveAttachmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveAttachmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveAttachmentMutation, { data, loading, error }] = useSaveAttachmentMutation({
+ *   variables: {
+ *      attachment: // value for 'attachment'
+ *   },
+ * });
+ */
+export function useSaveAttachmentMutation(baseOptions?: Apollo.MutationHookOptions<SaveAttachmentMutation, SaveAttachmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveAttachmentMutation, SaveAttachmentMutationVariables>(SaveAttachmentDocument, options);
+      }
+export type SaveAttachmentMutationHookResult = ReturnType<typeof useSaveAttachmentMutation>;
+export type SaveAttachmentMutationResult = Apollo.MutationResult<SaveAttachmentMutation>;
+export type SaveAttachmentMutationOptions = Apollo.BaseMutationOptions<SaveAttachmentMutation, SaveAttachmentMutationVariables>;
 export const SaveUserDocument = gql`
     mutation saveUser($user: AddUserInput!) {
   saveUser(user: $user) {
@@ -254,7 +331,12 @@ export type SaveUserMutationOptions = Apollo.BaseMutationOptions<SaveUserMutatio
 export const FindCurrentUserDocument = gql`
     query findCurrentUser {
   findCurrentUser {
+    id
     name
+    email
+    emailVerified
+    isAnonymous
+    uid
   }
 }
     `;

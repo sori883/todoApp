@@ -3,13 +3,13 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
 
-@ObjectType()
+@ObjectType('TasksOnUsers')
 export class TasksOnUsers {
   @Field((type) => Int)
-    taskIc!: number;
+    taskIds!: number;
 
   @Field((type) => Int)
-    userId!: number;
+    userIds!: number;
 
   @Field((type) => TaskModel)
     task!: TaskModel;

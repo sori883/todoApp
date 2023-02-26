@@ -20,6 +20,7 @@ export class AuthGuard implements CanActivate {
     }
     const idToken: string = requestHeaders.authorization.replace('Bearer ', '');
     try {
+      // リクエストコンテキストにユーザを付与する
       const user = await this.authService.validateUser(idToken);
       ctx.getContext().req['user'] = user;
       return user !== undefined;

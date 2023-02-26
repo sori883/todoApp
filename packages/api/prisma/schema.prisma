@@ -56,7 +56,7 @@ model Task {
   attachment Attachment[]
   comment Comment[]
   tasksOnUsers TasksOnUsers[]
-  taskOnTags TasksOnTags[]
+  tasksOnTags TasksOnTags[]
 
   @@index([projectId])
   @@index([userId])
@@ -108,7 +108,7 @@ model Tag {
   userId Int
   user User? @relation(fields: [userId], references: [id], onUpdate: NoAction)
 
-  taskOnTags TasksOnTags[]
+  tasksOnTags TasksOnTags[]
 
   @@index([workspaceId])
   @@index([userId])

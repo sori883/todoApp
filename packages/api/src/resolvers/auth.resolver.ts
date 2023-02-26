@@ -1,7 +1,7 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { DecodedIdToken } from 'firebase-admin/auth';
 
+import { User } from '@/@generated/prisma-nestjs-graphql/user/user.model';
 import { UserParam } from '@/decorator/user.decorator';
 import { AddUserInput, UpdateUserInput } from '@/dto/user.dto';
 import { AuthGuard } from '@/guard/auth.guard';
@@ -14,7 +14,7 @@ export class AuthResolver {
 
   @UseGuards(AuthGuard)
   @Query((returns) => UserModel, { nullable: false })
-  async findCurrentUser(@UserParam() user: DecodedIdToken) {
+  async findCurrentUser(@UserParam() user: User) {
     return await this.authService.findOneByUid(user.uid);
   }
 

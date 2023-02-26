@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
 
 
+import { AttachmentModule } from '@/modules/attachment.module';
 import { AuthModule } from '@/modules/auth.module';
 import { DateScalar } from '@/scalars/date.scalar';
 
@@ -16,7 +17,7 @@ import { DateScalar } from '@/scalars/date.scalar';
       autoSchemaFile: 'schema.graphql',
       sortSchema: true,
     }),
-    AuthModule
+    AuthModule,
   ],
   controllers: [],
   providers: [DateScalar],

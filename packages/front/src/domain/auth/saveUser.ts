@@ -1,9 +1,10 @@
+import { UserCredential } from 'firebase/auth';
+
 import { createApolloClient } from 'graphql/client';
 import { SaveUserDocument, SaveUserMutation, SaveUserMutationVariables } from 'graphql/generated';
 import { firebaseAuth } from 'lib/firebase';
-import { User } from 'states/atoms/user';
 
-export const saveUser = async (user: User) => {
+export const saveUser = async (user: UserCredential['user']) => {
   const idToken = await firebaseAuth.currentUser?.getIdToken();
   const client = createApolloClient(idToken);
 
@@ -21,7 +22,7 @@ export const saveUser = async (user: User) => {
         },
       },
     });
-    return data;
+    return data ? data.saveUser : null;
   } catch (error) {
     console.log(error);
   }

@@ -4,7 +4,7 @@ import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
 import { WorkspaceModel } from '@/models/workspace.model';
 
-@ObjectType()
+@ObjectType('AttachmentModel')
 export class AttachmentModel {
   @Field((type) => Int)
     id!: number;
@@ -14,7 +14,6 @@ export class AttachmentModel {
 
   @Field()
     path!: string;
-
 
   @Field()
     createdAt!: Date;
